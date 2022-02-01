@@ -214,10 +214,6 @@ namespace SimpleMinecraftLauncher
                 Log("Удаление " + V.mVersionArchiveName + " прошло успешно");
             });
         }
-        /// <summary>
-        /// hui.
-        /// </summary>
-        /// <param name="V"></param>
         internal void InstallClient(Version V)
         {
             AsyncWorker.PollAsyncMethod(async () =>
