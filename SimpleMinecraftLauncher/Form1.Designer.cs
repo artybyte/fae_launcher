@@ -126,6 +126,7 @@
             this.bgPanel.Controls.Add(this.label3);
             this.bgPanel.Controls.Add(this.versionList);
             this.bgPanel.Controls.Add(this.textBox1);
+            this.bgPanel.Controls.Add(this.button1);
             this.bgPanel.Location = new System.Drawing.Point(13, 44);
             this.bgPanel.Name = "bgPanel";
             this.bgPanel.Size = new System.Drawing.Size(685, 355);

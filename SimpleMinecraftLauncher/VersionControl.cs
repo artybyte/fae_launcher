@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SimpleMinecraftLauncher
 {
@@ -9,16 +12,16 @@ namespace SimpleMinecraftLauncher
         public int checksum = 1;
 
         public void SetVersions(List<Version> Versions)
-        {
+    {
             versions = Versions;
             checksum = GetHashCode();
-        }
+    }
 
         /// <summary>
         /// Sets checksum of current object contains versions
         /// </summary>
         public void UpdateChecksum()
-        {
+    {
             checksum = GetHashCode();
         }
 
@@ -47,7 +50,7 @@ namespace SimpleMinecraftLauncher
         }
 
         public override int GetHashCode()
-        {
+            {
             unchecked
             {
                 int result = 38; // prime
@@ -58,15 +61,15 @@ namespace SimpleMinecraftLauncher
                     result *= versions.Count;
                     foreach (Version v in versions)
                         result += v.GetHashCode() * 11;
-                }
+            }
 
                 return result;
-            }
+        }
         }
     }
 
     public class Version
-    {
+        {
 
         public string mVersionName { get; set; }
         public string mVersionDescription { get; set; }
@@ -80,7 +83,7 @@ namespace SimpleMinecraftLauncher
         private bool mLocalValidated = false;
 
         internal void Init()
-        {
+            {
             mVersionName = "Номер версии";
             mVersionDescription = "Описание версии";
             mVersionDownloadURL = "URL версии";
@@ -88,17 +91,17 @@ namespace SimpleMinecraftLauncher
             mVersionArchiveName = "Название архива версии";
             mArchiveChecksum = "Хэш архива";
             mValidatedCRC = false;
-        }
+            }
 
         internal void SetValidated(bool Validated)
-        {
+            {
             mLocalValidated = Validated;
         }
 
         internal bool GetValidated()
-        {
+            {
             return mLocalValidated;
-        }
+            }
 
         public override int GetHashCode()
         {

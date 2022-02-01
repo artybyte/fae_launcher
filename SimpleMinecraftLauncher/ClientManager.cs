@@ -1,6 +1,10 @@
 ﻿using SimpleMinecraftLauncher.Properties;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -41,7 +45,7 @@ namespace SimpleMinecraftLauncher
         {
             string VersionDataJSON = File.ReadAllText(CurrentDirectory+Constants.JSON_CONFIG_PATH);
             CurrentVersions = VersionControlDeserializer.AssembleVersionControl(VersionDataJSON);
-            
+
             onClientDataReady?.Invoke(this, null);
             
             UpdateLocalConfigCRC();
@@ -73,7 +77,7 @@ namespace SimpleMinecraftLauncher
         {
             if (!Directory.Exists(CurrentDirectory + Constants.MINECRAFT_CLIENTS_PATH))
                 Directory.CreateDirectory(CurrentDirectory + Constants.MINECRAFT_CLIENTS_PATH);
-            
+
             if (!Directory.Exists(Constants.MINECRAFT_INSTALLED_CLIENTS_PATH))
                 Directory.CreateDirectory(Constants.MINECRAFT_INSTALLED_CLIENTS_PATH);
 
@@ -217,7 +221,7 @@ namespace SimpleMinecraftLauncher
         internal void InstallClient(Version V)
         {
             AsyncWorker.PollAsyncMethod(async () =>
-            {
+                {
                 Log("Устанавливаем клиент...");
                 FormManager.GetMainForm().DisableVersionControls();
 
@@ -230,7 +234,7 @@ namespace SimpleMinecraftLauncher
                 Log("Распаковка " + V.mVersionArchiveName + " прошла успешно");
 
                 FormManager.GetMainForm().EnableVersionControls();
-            });
+                });
         }
 
         private async void ValidateClientInstallation(Version V, bool force_reinstall=false)
