@@ -34,11 +34,11 @@
             this.bMin = new System.Windows.Forms.Button();
             this.bClose = new System.Windows.Forms.Button();
             this.bgPanel = new System.Windows.Forms.Panel();
-            this.button1 = new SimpleMinecraftLauncher.RippleButton();
+            this.ctxButton = new System.Windows.Forms.Button();
             this.loadingPanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.label2 = new System.Windows.Forms.Label();
+            this.loggerLabel = new System.Windows.Forms.Label();
             this.logBox = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,7 +47,7 @@
             this.configVersion = new System.Windows.Forms.Label();
             this.devLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.ctxButton = new System.Windows.Forms.Button();
+            this.button1 = new SimpleMinecraftLauncher.RippleButton();
             this.windowTopPanel.SuspendLayout();
             this.bgPanel.SuspendLayout();
             this.loadingPanel.SuspendLayout();
@@ -118,9 +118,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.bgPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(45)))));
             this.bgPanel.Controls.Add(this.ctxButton);
-            this.bgPanel.Controls.Add(this.button1);
             this.bgPanel.Controls.Add(this.loadingPanel);
-            this.bgPanel.Controls.Add(this.label2);
+            this.bgPanel.Controls.Add(this.loggerLabel);
             this.bgPanel.Controls.Add(this.logBox);
             this.bgPanel.Controls.Add(this.label4);
             this.bgPanel.Controls.Add(this.label3);
@@ -132,18 +131,25 @@
             this.bgPanel.Size = new System.Drawing.Size(685, 355);
             this.bgPanel.TabIndex = 1;
             // 
-            // button1
+            // ctxButton
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(141)))), ((int)(((byte)(148)))));
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
-            this.button1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(200)))), ((int)(((byte)(225)))));
-            this.button1.Location = new System.Drawing.Point(203, 212);
-            this.button1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
-            this.button1.Name = "button1";
-            this.button1.RippleColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
-            this.button1.Size = new System.Drawing.Size(256, 36);
-            this.button1.TabIndex = 13;
+            this.ctxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctxButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.ctxButton.BackgroundImage = global::SimpleMinecraftLauncher.Properties.Resources.more_options_button;
+            this.ctxButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ctxButton.FlatAppearance.BorderSize = 0;
+            this.ctxButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(255)))));
+            this.ctxButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(255)))));
+            this.ctxButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ctxButton.Font = new System.Drawing.Font("Bahnschrift Condensed", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ctxButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ctxButton.Location = new System.Drawing.Point(439, 166);
+            this.ctxButton.Name = "ctxButton";
+            this.ctxButton.Size = new System.Drawing.Size(20, 21);
+            this.ctxButton.TabIndex = 4;
+            this.ctxButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.ctxButton.UseVisualStyleBackColor = false;
+            this.ctxButton.Click += new System.EventHandler(this.button2_Click);
             // 
             // loadingPanel
             // 
@@ -167,9 +173,9 @@
             this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label5.Location = new System.Drawing.Point(180, 28);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(301, 13);
+            this.label5.Size = new System.Drawing.Size(288, 13);
             this.label5.TabIndex = 12;
-            this.label5.Text = "Пожалуйста, подождите, загружаем необходимые файлы";
+            this.label5.Text = "Пожалуйста, подождите, происходит фоновая работа...";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // progressBar
@@ -181,17 +187,20 @@
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 11;
             // 
-            // label2
+            // loggerLabel
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.label2.Location = new System.Drawing.Point(476, 90);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 16);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Logger";
+            this.loggerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.loggerLabel.AutoSize = true;
+            this.loggerLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(50)))));
+            this.loggerLabel.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.loggerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.loggerLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.loggerLabel.Location = new System.Drawing.Point(476, 90);
+            this.loggerLabel.Name = "loggerLabel";
+            this.loggerLabel.Size = new System.Drawing.Size(56, 16);
+            this.loggerLabel.TabIndex = 5;
+            this.loggerLabel.Text = "Logger";
+            this.loggerLabel.Click += new System.EventHandler(this.label2_Click);
             // 
             // logBox
             // 
@@ -289,25 +298,18 @@
             this.label6.TabIndex = 6;
             this.label6.Text = "special for Acasual Emergency Foundation";
             // 
-            // ctxButton
+            // button1
             // 
-            this.ctxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctxButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ctxButton.BackgroundImage = global::SimpleMinecraftLauncher.Properties.Resources.more_options_button;
-            this.ctxButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ctxButton.FlatAppearance.BorderSize = 0;
-            this.ctxButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(255)))));
-            this.ctxButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(255)))));
-            this.ctxButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ctxButton.Font = new System.Drawing.Font("Bahnschrift Condensed", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ctxButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ctxButton.Location = new System.Drawing.Point(439, 166);
-            this.ctxButton.Name = "ctxButton";
-            this.ctxButton.Size = new System.Drawing.Size(20, 21);
-            this.ctxButton.TabIndex = 4;
-            this.ctxButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.ctxButton.UseVisualStyleBackColor = false;
-            this.ctxButton.Click += new System.EventHandler(this.button2_Click);
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(141)))), ((int)(((byte)(148)))));
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
+            this.button1.HighlightColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(200)))), ((int)(((byte)(225)))));
+            this.button1.Location = new System.Drawing.Point(203, 212);
+            this.button1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.button1.Name = "button1";
+            this.button1.RippleColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(25)))), ((int)(((byte)(25)))));
+            this.button1.Size = new System.Drawing.Size(256, 36);
+            this.button1.TabIndex = 13;
             // 
             // Form1
             // 
@@ -352,7 +354,7 @@
         private System.Windows.Forms.ComboBox versionList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label loggerLabel;
         public System.Windows.Forms.RichTextBox logBox;
         internal System.Windows.Forms.Panel loadingPanel;
         private System.Windows.Forms.ProgressBar progressBar;

@@ -52,6 +52,8 @@ namespace SimpleMinecraftLauncher
 
             button1.OnClick += button1_Click;
             button1.Text = "Проверить клиент";
+
+            TriggerLogger();
         }
 
 
@@ -97,10 +99,23 @@ namespace SimpleMinecraftLauncher
             Application.Exit();
         }
 
+        internal void ShowLogger()
+        {
+            logBox.Height = 243;
+            loggerLabel.Location = new Point(476, 90);
+        }
+
+        internal void HideLogger()
+        {
+            logBox.Height = 0;
+            loggerLabel.Location = new Point(476, 336);
+        }
+
         internal void EnableVersionControls()
         {
             Invoke(new MethodInvoker(() => {
                 button1.Enabled = true;
+                ctxButton.Enabled = true;
                 versionList.Enabled = true;
             }));
         }
@@ -109,6 +124,7 @@ namespace SimpleMinecraftLauncher
         {
             Invoke(new MethodInvoker(() => {
                 button1.Enabled = false;
+                ctxButton.Enabled = false;
                 versionList.Enabled = false;
             }));
         }
@@ -249,14 +265,18 @@ namespace SimpleMinecraftLauncher
                     if (EnabledByCheckComplete)
                         button1.Enabled = true;
 
-                    if (ProhibitedClients.Contains(selectedVersion.mVersionArchiveName))
+                    if (!selectedVersion.mVersionEnabled)
                     {
+                        ctxButton.Enabled = false;
+                        CanEnableMainButton = false;
                         button1.Enabled = false;
                         button1.Text = "Недоступно";
-                        CanEnableMainButton = false;
                     }
                     else
+                    {
+                        ctxButton.Enabled = true;
                         CanEnableMainButton = true;
+                    }
                 }
             }
         }
@@ -288,23 +308,42 @@ namespace SimpleMinecraftLauncher
             CMS.Items.Add("Переустановить клиент");
             CMS.Items.Add("Удалить клиент");
             CMS.ItemClicked += (a, b) => {
+                // if selected index of menu is valid
                 if (versionList.SelectedIndex != -1 & versionList.SelectedIndex <= mClientManager.GetVersionData().versions.Count) {
                     Version V = mClientManager.GetVersionData().versions[versionList.SelectedIndex];
                     if (b.ClickedItem.Text == reinstallClient)
                     {
-                        mClientManager.InstallClient(V);
-                        SwitchToCheck();
+                        mClientManager.InstallClient(V, () => {
+                            SwitchToLaunch();
+                        });
                     }
                     
                     if (b.ClickedItem.Text == deleteClient)
                     {
-                        mClientManager.DeleteClient(V);
-                        SwitchToCheck();
+                        mClientManager.DeleteClient(V, () =>
+                        {
+                            SwitchToCheck();
+                        });
+                        
                     }
                 }
 
             };
             CMS.Show(PointToScreen(ctxButton.Location));
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+            Settings.Default.logger_show = !Settings.Default.logger_show;
+            TriggerLogger();
+        }
+
+        private void TriggerLogger()
+        {
+            if (Settings.Default.logger_show)
+                ShowLogger();
+            else
+                HideLogger();
         }
     }
 }

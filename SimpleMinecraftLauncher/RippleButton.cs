@@ -56,7 +56,6 @@ namespace SimpleMinecraftLauncher
 
         private Color disabledRippleColor = Color.FromArgb(140, 255, 150, 150);
         private Color disabledHighlightColor = Color.FromArgb(140, 150, 56, 56);
-        private Color currentBgColor;
 
         private string text = "button";
         private bool hovering = false;
@@ -76,12 +75,7 @@ namespace SimpleMinecraftLauncher
             InitializeComponent();
             SetStyle(ControlStyles.ResizeRedraw, true);
             backgroundWorker1.RunWorkerAsync();
-
-            currentBgColor = highlightColor;
         }
-
-        // make bg color interpolation
-        // NEW DEV FEATURE V 1.111111111111111111111228783812343812472342374823472384723742834
 
         protected override void OnPaint(PaintEventArgs e)
         {

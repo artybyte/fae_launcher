@@ -101,6 +101,7 @@
       <DependentUpon>RippleButton.cs</DependentUpon>
     </Compile>
     <Compile Include="TaskPool.cs" />
+    <Compile Include="UIManager.cs" />
     <Compile Include="VersionControl.cs" />
     <Compile Include="VersionControlDeserializer.cs" />
     <EmbeddedResource Include="Form1.resx">

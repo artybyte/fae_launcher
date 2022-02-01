@@ -40,6 +40,7 @@ namespace SimpleMinecraftLauncher
                 _str += "Version archive name: " + V.mVersionArchiveName + "\n";
                 _str += "Version archive checksum: " + V.mArchiveChecksum + "\n";
                 _str += "Version client server IP: " + V.mClientServerIP + "\n";
+                _str += "Version enabled: " + V.mVersionEnabled + "\n";
 
                 ret += _str + "\n";
 
@@ -69,7 +70,7 @@ namespace SimpleMinecraftLauncher
     }
 
     public class Version
-        {
+    {
 
         public string mVersionName { get; set; }
         public string mVersionDescription { get; set; }
@@ -79,11 +80,13 @@ namespace SimpleMinecraftLauncher
         public string mArchiveChecksum { get; set; }
         public bool mValidatedCRC { get; set; }
         public string[] mVersionMods { get; set; }
+        public bool mVersionEnabled { get; set; }
 
         private bool mLocalValidated = false;
 
+
         internal void Init()
-            {
+        {
             mVersionName = "Номер версии";
             mVersionDescription = "Описание версии";
             mVersionDownloadURL = "URL версии";
@@ -91,17 +94,18 @@ namespace SimpleMinecraftLauncher
             mVersionArchiveName = "Название архива версии";
             mArchiveChecksum = "Хэш архива";
             mValidatedCRC = false;
-            }
+            mVersionEnabled = true;
+        }
 
         internal void SetValidated(bool Validated)
-            {
+        {
             mLocalValidated = Validated;
         }
 
         internal bool GetValidated()
-            {
+        {
             return mLocalValidated;
-            }
+        }
 
         public override int GetHashCode()
         {
@@ -130,7 +134,6 @@ namespace SimpleMinecraftLauncher
                     result += mVersionArchiveName.GetHashCode();
 
                 result *= 397;
-                if (mValidatedCRC != null)
                     result += mValidatedCRC.GetHashCode();
 
                 result *= 397;
@@ -140,6 +143,9 @@ namespace SimpleMinecraftLauncher
                 result *= 397;
                 if (mVersionMods != null)
                     result += mVersionMods.GetHashCode();
+
+                result *= 397;
+                    result += mVersionEnabled.GetHashCode();
 
                 return result;
             }

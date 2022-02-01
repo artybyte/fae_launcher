@@ -33,9 +33,7 @@ namespace SimpleMinecraftLauncher
 
         private void Log(string log, bool clearBefore=false)
         {
-            if (FormManager.GetMainForm() == null)
-                return;
-            FormManager.GetMainForm().Log(log, clearBefore);
+            UIManager.LogMessage(log, clearBefore);
         }
 
         /// <summary>
@@ -47,7 +45,10 @@ namespace SimpleMinecraftLauncher
             CurrentVersions = VersionControlDeserializer.AssembleVersionControl(VersionDataJSON);
 
             onClientDataReady?.Invoke(this, null);
-            
+
+            UIManager.ShowLoadingPanel();
+            UIManager.SetProgress(33);
+
             UpdateLocalConfigCRC();
 
             // this method should be used (IMPORTANT)******************************************************************************************************
@@ -57,8 +58,11 @@ namespace SimpleMinecraftLauncher
             // now we get deserialized VersionControl with updated CRCs and ready to compare it with host version of file
             Log("Проверка контрольных сумм клиентов..");
             ValidateClientCRCs();
+            UIManager.SetProgress(66);
             Log("Проверка контрольной суммы конфига..");
             ValidateConfigCRC();
+            UIManager.SetProgress(0);
+            UIManager.HideLoadingPanel();
 
         }
         /// <summary>
@@ -99,10 +103,10 @@ namespace SimpleMinecraftLauncher
                         V.mValidatedCRC = true;
                 }
                 Log("Проверка контрольных сумм - ОК");
-                if (FormManager.GetMainForm().CanEnableMainButton)
-                    FormManager.GetMainForm().button1.Enabled = true;
+                if (UIManager.CanEnableMainButton())
+                    UIManager.EnableMainButton();
 
-                FormManager.GetMainForm().EnabledByCheckComplete = true;
+                UIManager.EnableByCheckComplete();
             }
             catch (Exception ex)
             {
@@ -129,7 +133,7 @@ namespace SimpleMinecraftLauncher
             return CurrentDirectory + Constants.MINECRAFT_CLIENTS_PATH + "\\" + archiveName;
         }
 
-        private async Task DownloadClientArchive(Version V)
+        private async Task DownloadClientArchive(Version V, Action callback)
         {
             
             if (V == null)
@@ -153,7 +157,7 @@ namespace SimpleMinecraftLauncher
                             double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                             double percentage = bytesIn / totalBytes * 100;
 
-                            FormManager.GetMainForm().SetLoadingProgress((int)percentage);
+                            UIManager.SetProgress((int)percentage);
 
                             Log("Загрузка " + V.mVersionArchiveName + " - " + percentage + "%", true);
 
@@ -164,15 +168,17 @@ namespace SimpleMinecraftLauncher
 
                             Log("Проверка установки...");
                             ValidateClientInstallation(V);
-                            FormManager.GetMainForm().SetLoadingProgress(0);
-                            FormManager.GetMainForm().ShowLoadingPanel(false);
+                            UIManager.SetProgress(0);
+                            UIManager.ShowLoadingPanel();
 
                             ValidateClientInstallation(V, true);
 
+                            callback();
+
                         };
 
-                        FormManager.GetMainForm().DisableVersionControls();
-                        FormManager.GetMainForm().ShowLoadingPanel(true);
+                        UIManager.DisableControls();
+                        UIManager.ShowLoadingPanel();
                         client.DownloadFileAsync(new Uri(Constants.HOST_DOWNLOAD_CLIENT_ARCHIVE + V.mVersionArchiveName, UriKind.Absolute), GetClientZIPFile(V.mVersionArchiveName));
                     }
                     Log("Архив " + V.mVersionArchiveName + " скачан успешно");
@@ -194,13 +200,11 @@ namespace SimpleMinecraftLauncher
             return s.Replace(".zip", "");
         }
 
-        internal void DeleteClient(Version V)
+        internal void DeleteClient(Version V, Action callback)
         {
             AsyncWorker.PollAsyncMethod(() =>
             {
                 Log("Удаляем клиент " + V.mVersionArchiveName);
-
-                FormManager.GetMainForm().DisableVersionControls();
 
                 DirectoryInfo di = new DirectoryInfo(GetClientPath(V.mVersionArchiveName));
                 foreach (FileInfo file in di.GetFiles())
@@ -209,27 +213,29 @@ namespace SimpleMinecraftLauncher
                 foreach (DirectoryInfo dir in di.GetDirectories())
                     dir.Delete(true);
 
-                FormManager.GetMainForm().EnableVersionControls();
-
                 Log("Удаление " + V.mVersionArchiveName + " прошло успешно");
+
+                callback();
             });
         }
-        internal void InstallClient(Version V)
+        internal void InstallClient(Version V, Action callback)
         {
             AsyncWorker.PollAsyncMethod(async () =>
                 {
-                Log("Устанавливаем клиент...");
-                FormManager.GetMainForm().DisableVersionControls();
+                    Log("Устанавливаем клиент...");
+                
+                    UIManager.DisableControls();
 
-                string ArchivePath = CurrentDirectory + Constants.MINECRAFT_CLIENTS_PATH + "\\" + V.mVersionArchiveName;
-                string InstallTo = GetClientPath(V.mVersionArchiveName);
+                    string ArchivePath = CurrentDirectory + Constants.MINECRAFT_CLIENTS_PATH + "\\" + V.mVersionArchiveName;
+                    string InstallTo = GetClientPath(V.mVersionArchiveName);
 
-                DeleteClient(V);
+                    DeleteClient(V, async () => {
+                        await Task.Run(() => { ZipFile.ExtractToDirectory(ArchivePath, InstallTo); UIManager.EnableControls(); });
+                        Log("Распаковка " + V.mVersionArchiveName + " прошла успешно");
 
-                await Task.Run(()=> { ZipFile.ExtractToDirectory(ArchivePath, InstallTo); });
-                Log("Распаковка " + V.mVersionArchiveName + " прошла успешно");
+                        callback();
+                    });
 
-                FormManager.GetMainForm().EnableVersionControls();
                 });
         }
 
@@ -241,6 +247,8 @@ namespace SimpleMinecraftLauncher
                 return;
             }
 
+            UIManager.DisableControls();
+
             string clientDir = GetClientPath(V.mVersionArchiveName);
 
             if (!Directory.Exists(clientDir))
@@ -250,21 +258,19 @@ namespace SimpleMinecraftLauncher
 
             if (filesCount >= 3 & !force_reinstall)
             {
-                // ok chill - client is ok (not perfect method to validate, but ok)
-                Log("Клиент "+V.mVersionArchiveName+" в порядке");
+                Log("Клиент " + V.mVersionArchiveName + " в порядке");
+                UIManager.EnableControls();
             }
             else
             {
-                ValidateClientArchive(V);
-
-                // unpack client folder - install client
-                InstallClient(V);
+                ValidateClientArchive(V, () => {
+                    InstallClient(V, () => { UIManager.EnableControls(); });
+                });
             }
 
         }
-        private async void ValidateClientArchive(Version V)
+        private async void ValidateClientArchive(Version V, Action callbackOnDownload)
         {
-
             if (V == null)
             {
                 Log("Ошибка - версия не обнаружена (код ошибки - 1)");
@@ -282,18 +288,19 @@ namespace SimpleMinecraftLauncher
                 {
                     // ok, client validated
                     Log("Архив " + V.mVersionArchiveName + " в порядке");
+                    callbackOnDownload();
                 }
                 else
                 {
                     // no, client is not actual, download
                     Log("Не верная контрольная сумма " + V.mVersionArchiveName + " - скачиваем");
-                    await DownloadClientArchive(V);
+                    await DownloadClientArchive(V, callbackOnDownload);
                 }
             }
             else
             {
                 Log("Не найден "+ V.mVersionArchiveName + " - скачиваем");
-                await DownloadClientArchive(V);
+                await DownloadClientArchive(V, callbackOnDownload);
             }
         }
 
@@ -305,12 +312,9 @@ namespace SimpleMinecraftLauncher
                 return;
             }
 
-            //AsyncWorker.PollAsyncMethod(() => {
-                ValidateClientInstallation(V); // test
-                CurrentVersions.versions[CurrentVersions.versions.IndexOf(V)].SetValidated(true);
-                FormManager.GetMainForm().SwitchToLaunch();
-            //}
-            //);
+            ValidateClientInstallation(V);
+            CurrentVersions.versions[CurrentVersions.versions.IndexOf(V)].SetValidated(true);
+            UIManager.SwitctToLaunch();
         }
 
         private async void UpdateConfig()
@@ -335,7 +339,7 @@ namespace SimpleMinecraftLauncher
 
             } catch(Exception ex)
             {
-                Log("Не удалось обновить конфиг ("+ex.Message+")");
+                Log("Не удалось обновить конфиг (" + ex.Message + ") (код ошибки - 2)");
             }
 
         }
@@ -363,7 +367,7 @@ namespace SimpleMinecraftLauncher
                     UpdateConfig();
                 }
 
-                FormManager.GetMainForm().SelectFirstAvailableVersion();
+                UIManager.SelectFirstAvailableVersion();
             }
             catch (Exception ex)
             {
