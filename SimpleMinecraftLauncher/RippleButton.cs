@@ -81,6 +81,7 @@ namespace SimpleMinecraftLauncher
         }
 
         // make bg color interpolation
+        // NEW DEV FEATURE V 1.111111111111111111111228783812343812472342374823472384723742834
 
         protected override void OnPaint(PaintEventArgs e)
         {
