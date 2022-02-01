@@ -80,6 +80,8 @@ namespace SimpleMinecraftLauncher
             currentBgColor = highlightColor;
         }
 
+        // make bg color interpolation
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
