@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,44 +16,57 @@ namespace SimpleMinecraftLauncher
 
         private string ClientPath;
         private LaunchOptions Options;
+        internal bool CanLaunch = false;
 
         public MinecraftLauncher(string client_path, string username, string version_name, string min_ram, string max_ram, string serverHost=null, string serverPort=null)
         {
 
             ClientPath = client_path;
             Options = new LaunchOptions(client_path, username, version_name, min_ram, max_ram);
+            if (Options.IsClassPathExist)
+                CanLaunch = true;
 
         }
 
         internal void LaunchClient()
         {
-            try
-            {
-                ProcessStartInfo minecraft = new ProcessStartInfo
-                {
-                    FileName = "javaw",
-                    CreateNoWindow = false,
-                    Arguments = Options.BuildArguments()
-                };
-                Process minecraftProcess = Process.Start(minecraft);
-                FormManager.GetMainForm().Hide();
 
-                while (!minecraftProcess.HasExited && minecraftProcess.Responding)
+            if (!FormManager.GetMainForm().ValidateNickname())
+            {
+                UIManager.ShowNotification("Никнейм должен соответствовать условиям. Минимум символов - 3. Максимум - 16. Только английские символы, цифры от 0 до 9 и нижнее подчеркивание", true);
+                UIManager.MainForm().textBox1.Focus();
+                return;
+            }
+            else
+                try
                 {
-                    Thread.Sleep(100);
+                    ProcessStartInfo minecraft = new ProcessStartInfo
+                    {
+                        FileName = "javaw",
+                        CreateNoWindow = false,
+                        Arguments = Options.BuildArguments()
+                    };
+                    Process minecraftProcess = Process.Start(minecraft);
+                    UIManager.MainForm().Hide();
+
+                    while (!minecraftProcess.HasExited & minecraftProcess.Responding)
+                    {
+                        Thread.Sleep(1000);
+                    }
+
+                    UIManager.MainForm().Show();
                 }
-
-                FormManager.GetMainForm().Show();
-            }
-            catch (Exception ex)
-            {
-                Log("Не удалось запустить клиент - " + ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    Log("Не удалось запустить клиент - " + ex.Message);
+                    if (ex is Win32Exception)
+                        UIManager.ShowNotification("Отсутствует Java! Не удалось запустить клиент Minecraft. Установите Java и попробуйте снова.", true);
+                }
         }
 
         private void Log(string s)
         {
-            FormManager.GetMainForm().Log(s);
+            UIManager.MainForm().Log(s);
         }
 
     }
@@ -69,7 +83,7 @@ namespace SimpleMinecraftLauncher
         private protected string ClientAssetsIndex = string.Empty;
         private protected string ClientUUID = "1e0ab942-8024-11ec-b05c-2346f1e65647";
         private protected string ClientAccessToken = "1e0ab940-8024-11ec-b05c-2346f1e65647";
-
+        internal bool IsClassPathExist = false;
         private void GetClassPathLibraries()
         {
 
@@ -87,6 +101,8 @@ namespace SimpleMinecraftLauncher
 
 
             ClassPathLibraries = temp.ToArray();
+            if (temp.Count > 0)
+                IsClassPathExist = true;
 
         }
 

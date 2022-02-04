@@ -1,40 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SimpleMinecraftLauncher
 {
+    
     public partial class RippleButton : UserControl
     {
+        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [Description("Ripple button text"), Category("Appearance")]
         public new string Text
         {
             get => text;
             set
             {
-                Invalidate();
                 text = value;
             }
         }
 
+        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [Description("Enables or disables button"), Category("Appearance")]
         public new bool Enabled
         {
             get => enabled;
             set
             {
-                Invalidate();
                 enabled = value;
             }
         }
 
-
+        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [Description("Ripple color of button (rippling circle shows after click)"), Category("Appearance")]
         public Color RippleColor
         {
@@ -42,111 +41,59 @@ namespace SimpleMinecraftLauncher
             set => rippleColor = value;
         }
 
-        [Description("Button highlight color"), Category("Appearance")]
-        public Color HighlightColor
+        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Description("Button background color"), Category("Appearance")]
+        public new Color BackColor
         {
-            get => highlightColor;
-            set => highlightColor = value;
+            get => backColor;
+            set => backColor = value;
+        }
+
+        [Browsable(true), EditorBrowsable(EditorBrowsableState.Always), Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [Description("Button highlight color"), Category("Appearance")]
+        public Color HoverColor
+        {
+            get => hoverColor;
+            set => hoverColor = value;
         }
 
         public new event EventHandler OnClick;
 
-        private Color rippleColor = Color.FromArgb(255, 180, 240, 255);
-        private Color highlightColor = Color.FromArgb(255, 140, 200, 225);
-
-        private Color disabledRippleColor = Color.FromArgb(140, 255, 150, 150);
-        private Color disabledHighlightColor = Color.FromArgb(140, 150, 56, 56);
-
+        private Color backColor = Color.FromArgb(255, 50, 88, 98);
+        private Color hoverColor = Color.FromArgb(255, 65, 103, 113);
+        private Color rippleColor = Color.FromArgb(150, 25, 45, 45);
         private string text = "button";
-        private bool hovering = false;
-        private bool rippleChanged = false;
-        private bool enabled = true;
-        private double bgOpacity = 0f;
-        private double bgStep = 0.00003;
-        private float rippleOpacity = 0.0f;
-        private float rippleRadius = 0.0f;
-        private float rippleMaximum = 600.0f;
-        private float rippleStep = 0.3f;
-        private const int rippleInitialAlpha = 180;
         private Point lastClick = new Point(0, 0);
+        private StringFormat LabelStringFormat;
+        private bool enabled = true;
 
         public RippleButton()
         {
             InitializeComponent();
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            backgroundWorker1.RunWorkerAsync();
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+              ControlStyles.AllPaintingInWmPaint |
+              ControlStyles.UserPaint |
+              ControlStyles.ResizeRedraw, true);
+            DoubleBuffered = true;
+            LabelStringFormat = new StringFormat();
+            LabelStringFormat.LineAlignment = StringAlignment.Center;
+            LabelStringFormat.Alignment = StringAlignment.Center;
         }
-
+        
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            Color bgColor = new Color();
-            int bgAlpha = (int)(bgOpacity * 255);
-            if (enabled)
-                bgColor = Color.FromArgb(bgAlpha, highlightColor.R, highlightColor.G, highlightColor.B);
-            else
-                bgColor = Color.FromArgb(bgAlpha, disabledHighlightColor.R, disabledHighlightColor.G, disabledHighlightColor.B);
+            Graphics g = e.Graphics;
+            g.Clear(backColor);
 
-            e.Graphics.FillRectangle(new SolidBrush(bgColor), ClientRectangle);
+            g.DrawString(text, Font, new SolidBrush(ForeColor), ClientRectangle, LabelStringFormat);
 
-            StringFormat format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            format.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString(text, Font, new SolidBrush(Color.White), ClientRectangle, format);
+            Refresh();
 
-            if (rippleChanged)
-            {
-                Color myRippleColor = new Color();
-                int rippleAlpha = Constants.Clamp((int)(rippleInitialAlpha - rippleOpacity * 255), 0, 255);
-                if (enabled)
-                    myRippleColor = Color.FromArgb(rippleAlpha, rippleColor.R, rippleColor.G, rippleColor.B);
-                else
-                    myRippleColor = Color.FromArgb(rippleAlpha, disabledRippleColor.R, disabledRippleColor.G, disabledRippleColor.B);
-
-                e.Graphics.FillEllipse(new SolidBrush(myRippleColor), lastClick.X-rippleRadius/2, lastClick.Y-rippleRadius / 2, rippleRadius, rippleRadius);
-                rippleRadius += rippleStep;
-                rippleOpacity = rippleRadius / rippleMaximum;
-
-                if (rippleRadius >= rippleMaximum)
-                {
-                    rippleChanged = false;
-                    rippleRadius = 0;
-                    rippleOpacity = 0;
-                    if (enabled)
-                        OnClick?.Invoke(this, null);
-                }
-            }
         }
 
-        private void RippleButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            
-            lastClick = new Point(e.X, e.Y);
-            rippleChanged = true;
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (true)
-            {
-                bgOpacity = Constants.Clamp(bgOpacity + (hovering ? bgStep : -bgStep), 0, 1.0f);
-
-                if (rippleChanged | bgOpacity>0)
-                {
-                    Invalidate();
-                }
-            }
-        }
-
-        private void RippleButton_MouseEnter(object sender, EventArgs e)
-        {
-            hovering = true;
-        }
-
-        private void RippleButton_MouseLeave(object sender, EventArgs e)
-        {
-            hovering = false;
-        }
     }
 }

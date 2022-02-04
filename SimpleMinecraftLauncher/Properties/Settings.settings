@@ -11,5 +11,11 @@
     <Setting Name="logger_show" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="updateRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="launcherBuild" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1.0.1.0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

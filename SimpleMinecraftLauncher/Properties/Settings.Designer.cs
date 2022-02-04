@@ -58,5 +58,29 @@ namespace SimpleMinecraftLauncher.Properties {
                 this["logger_show"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool updateRequired {
+            get {
+                return ((bool)(this["updateRequired"]));
+            }
+            set {
+                this["updateRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.0.1.0")]
+        public string launcherBuild {
+            get {
+                return ((string)(this["launcherBuild"]));
+            }
+            set {
+                this["launcherBuild"] = value;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,76 +10,87 @@ namespace SimpleMinecraftLauncher
     public static class UIManager
     {
 
-        internal static void LogMessage(string message, bool deleteAllprevious = false)
+        internal static Form1 MainForm()
         {
-            if (FormManager.GetMainForm() == null)
+            return FormManager.GetMainForm();
+        }
+        internal static void DisableUpdateButton()
+        {
+            MainForm().updateBtn.Visible = false;
+        }
+        internal static void LogMessage(string message, bool deleteAllprevious=false, Color? highlight=null)
+        {
+            if (MainForm() == null)
                 return;
-            FormManager.GetMainForm().Log(message, deleteAllprevious);
+            MainForm().Log(message, deleteAllprevious, highlight);
         }
 
         internal static void EnableControls()
         {
-            FormManager.GetMainForm().EnableVersionControls();
-            LogMessage("ENABLED!!!!!!!!!!");
+            MainForm().EnableVersionControls();
+        }
+
+        internal static void ShowNotification(string text, bool important=false)
+        {
+            MainForm().ShowNotification(text, important);
         }
 
         internal static void DisableControls()
         {
-            FormManager.GetMainForm().DisableVersionControls();
-            LogMessage("DISABLED!!!!!!!!!!");
+            MainForm().DisableVersionControls();
         }
 
         internal static bool CanEnableMainButton()
         {
-            return FormManager.GetMainForm().CanEnableMainButton;
+            return MainForm().CanEnableMainButton;
         }
 
         internal static void EnableMainButton()
         {
-            FormManager.GetMainForm().button1.Enabled = true;
+            MainForm().button1.Enabled = true;
         }
 
         internal static void DisableMainButton()
         {
-            FormManager.GetMainForm().button1.Enabled = false;
+            MainForm().button1.Enabled = false;
         }
 
         internal static void EnableByCheckComplete()
         {
-            FormManager.GetMainForm().EnabledByCheckComplete = true;
+            MainForm().EnabledByCheckComplete = true;
         }
 
         internal static void DisableByCheckComplete()
         {
-            FormManager.GetMainForm().EnabledByCheckComplete = false;
+            MainForm().EnabledByCheckComplete = false;
         }
 
         internal static void SetProgress(int progress)
         {
-            FormManager.GetMainForm().SetLoadingProgress(progress);
+            MainForm().SetLoadingProgress(progress);
         }
 
         internal static void ShowLoadingPanel()
         {
-            FormManager.GetMainForm().ShowLoadingPanel(true);
+            MainForm().ShowLoadingPanel(true);
         }
 
         internal static void HideLoadingPanel()
         {
-            FormManager.GetMainForm().ShowLoadingPanel(false);
+            MainForm().ShowLoadingPanel(false);
         }
 
         internal static void SwitctToLaunch()
         {
-            FormManager.GetMainForm().SwitchToLaunch();
+            MainForm().SwitchToLaunch();
         }
         internal static void SwitchToCheck()
         {
-            FormManager.GetMainForm().SwitchToCheck();
+            MainForm().SwitchToCheck();
         }
         internal static void SelectFirstAvailableVersion()
         {
-            FormManager.GetMainForm().SelectFirstAvailableVersion();
+            MainForm().SelectFirstAvailableVersion();
         }
 
     }

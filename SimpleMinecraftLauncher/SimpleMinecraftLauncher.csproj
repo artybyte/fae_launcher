@@ -84,6 +84,7 @@
     <Compile Include="AsyncWorker.cs" />
     <Compile Include="ClientManager.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="FlashWindow.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
