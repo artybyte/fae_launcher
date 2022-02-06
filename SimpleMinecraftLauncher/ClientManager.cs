@@ -252,6 +252,8 @@ namespace SimpleMinecraftLauncher
             {
                 foreach (Version version in CurrentVersions.versions)
                 {
+                    if (!version.mVersionEnabled)
+                        continue;
                     string actualCRC = await AsyncWorker.MakeHTTPRequest(Constants.Web.HOST_GET_ARCHIVE_CRC_URL + version.mVersionArchiveName);
                     if (version.mArchiveChecksum != actualCRC)
                         version.mValidatedCRC = false;

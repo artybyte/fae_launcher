@@ -35,10 +35,12 @@
             this.bMin = new System.Windows.Forms.Button();
             this.bClose = new System.Windows.Forms.Button();
             this.bgPanel = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
             this.updateBtn = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.notifyPanel = new System.Windows.Forms.Panel();
+            this.notifyInfoText = new System.Windows.Forms.RichTextBox();
             this.infoLbl = new System.Windows.Forms.Label();
             this.infoBtnClose = new System.Windows.Forms.Button();
             this.ctxButton = new System.Windows.Forms.Button();
@@ -55,9 +57,9 @@
             this.devLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.notifyInfoText = new System.Windows.Forms.RichTextBox();
             this.windowTopPanel.SuspendLayout();
             this.bgPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.notifyPanel.SuspendLayout();
             this.loadingPanel.SuspendLayout();
             this.SuspendLayout();
@@ -132,6 +134,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.bgPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(45)))));
+            this.bgPanel.Controls.Add(this.pictureBox1);
             this.bgPanel.Controls.Add(this.button2);
             this.bgPanel.Controls.Add(this.updateBtn);
             this.bgPanel.Controls.Add(this.button1);
@@ -148,6 +151,16 @@
             this.bgPanel.Name = "bgPanel";
             this.bgPanel.Size = new System.Drawing.Size(685, 355);
             this.bgPanel.TabIndex = 1;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(323, 270);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 18;
+            this.pictureBox1.TabStop = false;
             // 
             // button2
             // 
@@ -214,6 +227,20 @@
             this.notifyPanel.Size = new System.Drawing.Size(679, 48);
             this.notifyPanel.TabIndex = 14;
             this.notifyPanel.Visible = false;
+            // 
+            // notifyInfoText
+            // 
+            this.notifyInfoText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(50)))));
+            this.notifyInfoText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.notifyInfoText.DetectUrls = false;
+            this.notifyInfoText.ForeColor = System.Drawing.Color.White;
+            this.notifyInfoText.Location = new System.Drawing.Point(7, 15);
+            this.notifyInfoText.Name = "notifyInfoText";
+            this.notifyInfoText.ReadOnly = true;
+            this.notifyInfoText.ShortcutsEnabled = false;
+            this.notifyInfoText.Size = new System.Drawing.Size(666, 27);
+            this.notifyInfoText.TabIndex = 14;
+            this.notifyInfoText.Text = "";
             // 
             // infoLbl
             // 
@@ -427,20 +454,6 @@
             this.toolTip.ReshowDelay = 100;
             this.toolTip.ToolTipTitle = "Подсказка";
             // 
-            // notifyInfoText
-            // 
-            this.notifyInfoText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(50)))));
-            this.notifyInfoText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.notifyInfoText.DetectUrls = false;
-            this.notifyInfoText.ForeColor = System.Drawing.Color.White;
-            this.notifyInfoText.Location = new System.Drawing.Point(7, 15);
-            this.notifyInfoText.Name = "notifyInfoText";
-            this.notifyInfoText.ReadOnly = true;
-            this.notifyInfoText.ShortcutsEnabled = false;
-            this.notifyInfoText.Size = new System.Drawing.Size(666, 27);
-            this.notifyInfoText.TabIndex = 14;
-            this.notifyInfoText.Text = "";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -465,6 +478,7 @@
             this.windowTopPanel.PerformLayout();
             this.bgPanel.ResumeLayout(false);
             this.bgPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.notifyPanel.ResumeLayout(false);
             this.notifyPanel.PerformLayout();
             this.loadingPanel.ResumeLayout(false);
@@ -502,6 +516,7 @@
         private System.Windows.Forms.ToolTip toolTip;
         internal System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.RichTextBox notifyInfoText;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

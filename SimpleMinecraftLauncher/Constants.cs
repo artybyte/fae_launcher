@@ -59,7 +59,7 @@ namespace SimpleMinecraftLauncher
 
         internal static class Web
         {
-            private const string HOST_IP = "91.122.14.185:11111";
+            private const string HOST_IP = "5.9.31.179:32127";
             /// <summary>
             /// Get current launcher build version
             /// </summary>

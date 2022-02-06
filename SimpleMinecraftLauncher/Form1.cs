@@ -330,6 +330,8 @@ namespace SimpleMinecraftLauncher
                     {
                         ctxButton.Enabled = true;
                         CanEnableMainButton = true;
+                        button1.Enabled = true;
+                        button1.Text = selectedVersion.GetValidated() ? "Запуск" : "Проверить клиент";
                     }
                 }
             }
