@@ -29,6 +29,10 @@ namespace SimpleMinecraftLauncher
         private MinecraftLauncher mClientLauncher;
         private ClientManager mClientManager = new ClientManager();
 
+        private const string reinstallClient = "Переустановить клиент";
+        private const string deleteClient = "Удалить клиент";
+        private const string deleteClientArchive = "Очистить кэш клиента";
+
         public Form1()
         {
             InitializeComponent();
@@ -351,10 +355,6 @@ namespace SimpleMinecraftLauncher
         {
             // show context menu
             ContextMenuStrip CMS = new ContextMenuStrip();
-
-            string reinstallClient = "Переустановить клиент";
-            string deleteClient = "Удалить клиент";
-            string deleteClientArchive = "Удалить архив клиента";
 
             CMS.Items.Add(reinstallClient);
             CMS.Items.Add(deleteClient);

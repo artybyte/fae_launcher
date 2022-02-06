@@ -445,7 +445,7 @@ namespace SimpleMinecraftLauncher
             });
 
         }
-
+        // set ip of host ssh
         private void InstallLauncher(string path)
         {
             string executableName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
