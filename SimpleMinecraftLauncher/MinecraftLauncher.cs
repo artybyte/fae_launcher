@@ -47,14 +47,14 @@ namespace SimpleMinecraftLauncher
                         Arguments = Options.BuildArguments()
                     };
                     Process minecraftProcess = Process.Start(minecraft);
-                    UIManager.MainForm().Hide();
+                    UIManager.InvokeFormHide();
 
                     while (!minecraftProcess.HasExited & minecraftProcess.Responding)
                     {
                         Thread.Sleep(1000);
                     }
 
-                    UIManager.MainForm().Show();
+                    UIManager.InvokeFormShow();
                 }
                 catch (Exception ex)
                 {

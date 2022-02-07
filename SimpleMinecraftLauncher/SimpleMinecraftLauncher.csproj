@@ -138,6 +138,8 @@
   <ItemGroup>
     <None Include="Resources\more_options_button.png" />
     <None Include="Resources\foundation_logo.png" />
+    <None Include="Resources\skin_example.png" />
+    <None Include="Resources\ely.png" />
     <Content Include="temp.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -35,7 +35,6 @@
             this.bMin = new System.Windows.Forms.Button();
             this.bClose = new System.Windows.Forms.Button();
             this.bgPanel = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
             this.updateBtn = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -43,7 +42,6 @@
             this.notifyInfoText = new System.Windows.Forms.RichTextBox();
             this.infoLbl = new System.Windows.Forms.Label();
             this.infoBtnClose = new System.Windows.Forms.Button();
-            this.ctxButton = new System.Windows.Forms.Button();
             this.loadingPanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
@@ -57,11 +55,21 @@
             this.devLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.label2 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ctxButton = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.elyLink = new System.Windows.Forms.Label();
             this.windowTopPanel.SuspendLayout();
             this.bgPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.notifyPanel.SuspendLayout();
             this.loadingPanel.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // windowTopPanel
@@ -134,6 +142,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.bgPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(45)))));
+            this.bgPanel.Controls.Add(this.label2);
+            this.bgPanel.Controls.Add(this.panel1);
             this.bgPanel.Controls.Add(this.pictureBox1);
             this.bgPanel.Controls.Add(this.button2);
             this.bgPanel.Controls.Add(this.updateBtn);
@@ -152,16 +162,6 @@
             this.bgPanel.Size = new System.Drawing.Size(685, 355);
             this.bgPanel.TabIndex = 1;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(323, 270);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 18;
-            this.pictureBox1.TabStop = false;
-            // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -173,7 +173,7 @@
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Bahnschrift Condensed", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button2.Location = new System.Drawing.Point(440, 112);
+            this.button2.Location = new System.Drawing.Point(437, 112);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(20, 21);
             this.button2.TabIndex = 17;
@@ -191,9 +191,9 @@
             this.updateBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.updateBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.updateBtn.ForeColor = System.Drawing.SystemColors.ActiveCaption;
-            this.updateBtn.Location = new System.Drawing.Point(6, 323);
+            this.updateBtn.Location = new System.Drawing.Point(262, 323);
             this.updateBtn.Name = "updateBtn";
-            this.updateBtn.Size = new System.Drawing.Size(165, 28);
+            this.updateBtn.Size = new System.Drawing.Size(160, 30);
             this.updateBtn.TabIndex = 16;
             this.updateBtn.Text = "Обновить лаунчер";
             this.updateBtn.UseVisualStyleBackColor = false;
@@ -210,9 +210,9 @@
             this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.button1.Location = new System.Drawing.Point(227, 210);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(233, 36);
+            this.button1.Size = new System.Drawing.Size(230, 36);
             this.button1.TabIndex = 15;
-            this.button1.Text = "Проверить клиент";
+            this.button1.Text = "Запуск";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -277,26 +277,6 @@
             this.infoBtnClose.UseVisualStyleBackColor = false;
             this.infoBtnClose.Click += new System.EventHandler(this.infoBtnClose_Click);
             // 
-            // ctxButton
-            // 
-            this.ctxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctxButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ctxButton.BackgroundImage = global::SimpleMinecraftLauncher.Properties.Resources.more_options_button;
-            this.ctxButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ctxButton.FlatAppearance.BorderSize = 0;
-            this.ctxButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(255)))));
-            this.ctxButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(255)))));
-            this.ctxButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ctxButton.Font = new System.Drawing.Font("Bahnschrift Condensed", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ctxButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ctxButton.Location = new System.Drawing.Point(440, 166);
-            this.ctxButton.Name = "ctxButton";
-            this.ctxButton.Size = new System.Drawing.Size(20, 21);
-            this.ctxButton.TabIndex = 4;
-            this.ctxButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.ctxButton.UseVisualStyleBackColor = false;
-            this.ctxButton.Click += new System.EventHandler(this.button2_Click);
-            // 
             // loadingPanel
             // 
             this.loadingPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -319,9 +299,9 @@
             this.label5.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.label5.Location = new System.Drawing.Point(180, 19);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(288, 13);
+            this.label5.Size = new System.Drawing.Size(294, 13);
             this.label5.TabIndex = 12;
-            this.label5.Text = "Пожалуйста, подождите, происходит фоновая работа...";
+            this.label5.Text = "Загрузка и обработка данных... Пожалуйста, подождите";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // progressBar
@@ -390,7 +370,7 @@
             this.versionList.FormattingEnabled = true;
             this.versionList.Location = new System.Drawing.Point(227, 166);
             this.versionList.Name = "versionList";
-            this.versionList.Size = new System.Drawing.Size(209, 21);
+            this.versionList.Size = new System.Drawing.Size(200, 21);
             this.versionList.TabIndex = 6;
             this.versionList.SelectedIndexChanged += new System.EventHandler(this.versionList_SelectedIndexChanged);
             // 
@@ -403,7 +383,7 @@
             this.textBox1.MaxLength = 16;
             this.textBox1.Name = "textBox1";
             this.textBox1.ShortcutsEnabled = false;
-            this.textBox1.Size = new System.Drawing.Size(209, 22);
+            this.textBox1.Size = new System.Drawing.Size(200, 22);
             this.textBox1.TabIndex = 5;
             this.textBox1.WordWrap = false;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
@@ -454,6 +434,124 @@
             this.toolTip.ReshowDelay = 100;
             this.toolTip.ToolTipTitle = "Подсказка";
             // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label2.Location = new System.Drawing.Point(2, 307);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(182, 39);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Для игры со своим скином\r\nзарегистрируйте аккаунт на Ely.by\r\nНикнейм должен совпа" +
+    "дать";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(50)))));
+            this.panel1.Controls.Add(this.elyLink);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.pictureBox2);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Location = new System.Drawing.Point(0, 109);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(185, 188);
+            this.panel1.TabIndex = 19;
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.Transparent;
+            this.label7.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label7.Location = new System.Drawing.Point(4, 2);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(177, 26);
+            this.label7.TabIndex = 20;
+            this.label7.Text = "Хочешь выбрать \r\nвнешность для игры на сервере?";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(310, 250);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(64, 64);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 18;
+            this.pictureBox1.TabStop = false;
+            // 
+            // ctxButton
+            // 
+            this.ctxButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctxButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.ctxButton.BackgroundImage = global::SimpleMinecraftLauncher.Properties.Resources.more_options_button;
+            this.ctxButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ctxButton.FlatAppearance.BorderSize = 0;
+            this.ctxButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(60)))), ((int)(((byte)(255)))));
+            this.ctxButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(255)))));
+            this.ctxButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ctxButton.Font = new System.Drawing.Font("Bahnschrift Condensed", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ctxButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ctxButton.Location = new System.Drawing.Point(437, 166);
+            this.ctxButton.Name = "ctxButton";
+            this.ctxButton.Size = new System.Drawing.Size(20, 21);
+            this.ctxButton.TabIndex = 4;
+            this.ctxButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.ctxButton.UseVisualStyleBackColor = false;
+            this.ctxButton.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::SimpleMinecraftLauncher.Properties.Resources.ely;
+            this.pictureBox2.Location = new System.Drawing.Point(0, 39);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(185, 80);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 20;
+            this.pictureBox2.TabStop = false;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Cursor = System.Windows.Forms.Cursors.Default;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label8.ForeColor = System.Drawing.SystemColors.ActiveCaption;
+            this.label8.Location = new System.Drawing.Point(31, 123);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(135, 13);
+            this.label8.TabIndex = 21;
+            this.label8.Text = "Зарегистрируйся в Ely.by";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // elyLink
+            // 
+            this.elyLink.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.elyLink.AutoSize = true;
+            this.elyLink.BackColor = System.Drawing.Color.Transparent;
+            this.elyLink.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.elyLink.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.elyLink.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(200)))));
+            this.elyLink.Location = new System.Drawing.Point(25, 152);
+            this.elyLink.Name = "elyLink";
+            this.elyLink.Size = new System.Drawing.Size(143, 18);
+            this.elyLink.TabIndex = 22;
+            this.elyLink.Text = "Перейти по ссылке";
+            this.elyLink.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.elyLink.Click += new System.EventHandler(this.elyLink_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -478,11 +576,14 @@
             this.windowTopPanel.PerformLayout();
             this.bgPanel.ResumeLayout(false);
             this.bgPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.notifyPanel.ResumeLayout(false);
             this.notifyPanel.PerformLayout();
             this.loadingPanel.ResumeLayout(false);
             this.loadingPanel.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -517,6 +618,12 @@
         internal System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.RichTextBox notifyInfoText;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label elyLink;
     }
 }
 

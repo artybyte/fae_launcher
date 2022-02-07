@@ -63,6 +63,16 @@ namespace SimpleMinecraftLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ely {
+            get {
+                object obj = ResourceManager.GetObject("ely", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap foundation_logo {
             get {
                 object obj = ResourceManager.GetObject("foundation_logo", resourceCulture);
@@ -76,6 +86,16 @@ namespace SimpleMinecraftLauncher.Properties {
         internal static System.Drawing.Bitmap more_options_button {
             get {
                 object obj = ResourceManager.GetObject("more_options_button", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap skin_example {
+            get {
+                object obj = ResourceManager.GetObject("skin_example", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

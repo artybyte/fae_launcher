@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SimpleMinecraftLauncher
 {
@@ -70,24 +71,33 @@ namespace SimpleMinecraftLauncher
             MainForm().SetLoadingProgress(progress);
         }
 
-        internal static void ShowLoadingPanel()
+        internal static void ShowLoading()
         {
             MainForm().ShowLoadingPanel(true);
         }
 
-        internal static void HideLoadingPanel()
+        internal static void HideLoading()
         {
             MainForm().ShowLoadingPanel(false);
         }
 
-        internal static void SwitctToLaunch()
+        internal static void InvokeFormShow()
         {
-            MainForm().SwitchToLaunch();
+            MainForm().Invoke(new MethodInvoker(() => {
+                MainForm().Show();
+                MainForm().BringToFront();
+                FlashWindow.FlashWindowEx(MainForm());
+                MainForm().EnableVersionControls();
+            }));
         }
-        internal static void SwitchToCheck()
+
+        internal static void InvokeFormHide()
         {
-            MainForm().SwitchToCheck();
+            MainForm().Invoke(new MethodInvoker(() => {
+                MainForm().Hide();
+            }));
         }
+
         internal static void SelectFirstAvailableVersion()
         {
             MainForm().SelectFirstAvailableVersion();

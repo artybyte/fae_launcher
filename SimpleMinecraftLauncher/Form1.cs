@@ -36,8 +36,6 @@ namespace SimpleMinecraftLauncher
         public Form1()
         {
             InitializeComponent();
-            button1.Text = "Проверить клиент";
-
             TriggerLogger();
         }
 
@@ -105,26 +103,10 @@ namespace SimpleMinecraftLauncher
             return textBox1.Text.Length >= 3 & Regex.IsMatch(textBox1.Text, Constants.Util.MINECRAFT_NICKNAME_REGEX);
         }
 
-        internal void SwitchToCheck()
-        {
-            Launching = false;
-            Invoke(new MethodInvoker(() => {
-                button1.Text = "Проверить клиент";
-            }));
-        }
-
         internal void SelectFirstAvailableVersion()
         {
             if (mClientManager.GetVersionData().versions.Count > 0)
                 versionList.SelectedIndex = 0;
-        }
-
-        internal void SwitchToLaunch()
-        {
-            Launching = true;
-            Invoke(new MethodInvoker(() => {
-                button1.Text = "Запуск";
-            }));
         }
 
         private void bMin_Click(object sender, EventArgs e)
@@ -186,7 +168,9 @@ namespace SimpleMinecraftLauncher
         }
         private int NumberFromVersion(string ver)
         {
-            return int.Parse(ver.Replace(".", string.Empty), 0);
+            int num = 0;
+            int.TryParse(ver, out num);
+            return num;
         }
         private async void ValidateLauncherBuild()
         {
@@ -203,12 +187,12 @@ namespace SimpleMinecraftLauncher
             {
                 if (NumberFromVersion(ver) > NumberFromVersion(GetAssemblyVersion()))
                 {
-                    Log("Ваш лаунчер устарел", true, Color.DarkRed);
+                    Log("Ваш лаунчер устарел", false, Color.DarkRed);
                     ShowNotification("Доступно обновление лаунчера " + ver + "! Для обновления нажмите кнопку Обновить лаунчер.");
                     updateBtn.Visible = true;
                 }
                 else
-                    Log("Лаунчер последней версии", true, Color.LightGreen);
+                    Log("Лаунчер последней версии", false, Color.LightGreen);
             }
         }
         internal string GetAssemblyVersion()
@@ -240,29 +224,6 @@ namespace SimpleMinecraftLauncher
                     MessageBox.Show("Не удалось найти Java, проверьте установку. Это может стать причиной ошибки запуска Minecraft", "Установите Java!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
-
-        private void InitClientLaunch(int cliId)
-        {
-
-            Log("Запускаем клиент");
-
-            if (mClientManager.GetVersionData().versions.Count == 0)
-                return;
-
-            Version currentVersion = mClientManager.GetVersionData().versions[cliId];
-
-            string clientPath = mClientManager.GetClientPath(currentVersion.mVersionArchiveName);
-            string username = Settings.Default.nickname;
-            string versionName = currentVersion.mVersionName;
-
-            mClientLauncher = new MinecraftLauncher(clientPath, username, versionName, "2G", "5G");
-
-            if (mClientLauncher.CanLaunch)
-                mClientLauncher.LaunchClient();
-            else
-                MessageBox.Show("Клиент повреждён. Отсутствуют библиотеки. Запуск невозможен", "Ошибка запуска Minecraft", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -311,27 +272,17 @@ namespace SimpleMinecraftLauncher
 
                     // dev client can't be installed right now 
 
-                    if (selectedVersion.GetValidated())
-                        SwitchToLaunch();
-                    else
-                        SwitchToCheck();
-
-                    if (EnabledByCheckComplete)
-                        button1.Enabled = true;
-
                     if (!selectedVersion.mVersionEnabled)
                     {
                         ctxButton.Enabled = false;
                         CanEnableMainButton = false;
                         button1.Enabled = false;
-                        button1.Text = "Недоступно";
                     }
                     else
                     {
                         ctxButton.Enabled = true;
                         CanEnableMainButton = true;
                         button1.Enabled = true;
-                        button1.Text = selectedVersion.GetValidated() ? "Запуск" : "Проверить клиент";
                     }
                 }
             }
@@ -340,60 +291,42 @@ namespace SimpleMinecraftLauncher
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if (!Launching)
-            {
-                if (versionList.SelectedIndex != -1)
-                {
-                    Log("Начата проверка клиента - пожалуйста, подождите. Окно может зависнуть - это нормально.", true);
-                    mClientManager.ValidateGameClient(mClientManager.GetVersionData().versions[versionList.SelectedIndex], true);
-                }
-            }
-            else
-                InitClientLaunch(versionList.SelectedIndex);
+            if (mClientManager.GetVersionData().versions.Count == 0)
+                return;
+
+            Version version = mClientManager.GetVersionData().versions[versionList.SelectedIndex];
+            mClientManager.ValidateGameClient(version);
 
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            // show context menu
-            ContextMenuStrip CMS = new ContextMenuStrip();
+            ContextMenuStrip contextMenu = new ContextMenuStrip();
 
-            CMS.Items.Add(reinstallClient);
-            CMS.Items.Add(deleteClient);
-            CMS.Items.Add(deleteClientArchive);
-            CMS.ItemClicked += (a, b) => {
-                // if selected index of menu is valid
+            contextMenu.Items.Add(reinstallClient);
+            contextMenu.Items.Add(deleteClient);
+            contextMenu.Items.Add(deleteClientArchive);
+            contextMenu.ItemClicked += (a, b) => {
                 if (versionList.SelectedIndex != -1 & versionList.SelectedIndex <= mClientManager.GetVersionData().versions.Count) {
                     Version version = mClientManager.GetVersionData().versions[versionList.SelectedIndex];
 
                     if (b.ClickedItem.Text == reinstallClient)
-                    {
                         mClientManager.InstallClient(version, () => {
-                            SwitchToLaunch();
+                            ShowNotification($"Клиент {version.mVersionArchiveName} был переустановлен", true);
+                            UIManager.EnableControls();
                         });
-                    }
-
-                    if (b.ClickedItem.Text == deleteClient)
-                    {
-                        mClientManager.DeleteClient(version, () =>
-                        {
-                            SwitchToCheck();
+                    else if (b.ClickedItem.Text == deleteClient)
+                        mClientManager.DeleteClient(version, () => {
+                            ShowNotification($"Клиент {version.mVersionArchiveName} был удалён с компьютера", true);
                         });
-
-                    }
-
-                    if (b.ClickedItem.Text == deleteClientArchive)
-                    {
-                        mClientManager.DeleteArchive(version, () =>
-                        {
-                            SwitchToCheck();
+                    else if (b.ClickedItem.Text == deleteClientArchive)
+                        mClientManager.DeleteArchive(version, () => {
+                            ShowNotification($"Временные файлы клиента {version.mVersionArchiveName} были удалены", true);
                         });
-
-                    }
                 }
 
             };
-            CMS.Show(PointToScreen(ctxButton.Location));
+            contextMenu.Show(PointToScreen(ctxButton.Location));
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -433,6 +366,11 @@ namespace SimpleMinecraftLauncher
         private void button2_Click_1(object sender, EventArgs e)
         {
             button2_MouseEnter(sender, e);
+        }
+
+        private void elyLink_Click(object sender, EventArgs e)
+        {
+            Process.Start(Constants.Web.ELY_BY_SKINS_SERVICE_URL);
         }
     }
 }

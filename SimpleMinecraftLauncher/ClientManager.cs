@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.IO.Compression;
 using System.Drawing;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace SimpleMinecraftLauncher
 {
@@ -16,10 +17,11 @@ namespace SimpleMinecraftLauncher
     {
 
         public delegate void OnClientDataReady(object sender, ClientDataReadyEventArgs e);
-
+        public event OnClientDataReady onClientDataReady;
         private string CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private VersionControl CurrentVersions;
-        public event OnClientDataReady onClientDataReady;
+        private MinecraftLauncher mClientLauncher;
+        
         /// <summary>
         /// Loads and prepares actual versions data 
         /// </summary>
@@ -30,7 +32,6 @@ namespace SimpleMinecraftLauncher
 
             onClientDataReady?.Invoke(this, null);
 
-            UIManager.ShowLoadingPanel();
             UIManager.SetProgress(33);
 
             UpdateLocalConfigCRC();
@@ -46,7 +47,6 @@ namespace SimpleMinecraftLauncher
             Log("Проверка контрольной суммы конфига..");
             ValidateConfigCRC();
             UIManager.SetProgress(0);
-            UIManager.HideLoadingPanel();
 
         }
         /// <summary>
@@ -73,7 +73,7 @@ namespace SimpleMinecraftLauncher
                 File.Create(CurrentDirectory + Constants.Path.JSON_CONFIG_PATH).Close();
         }
 
-        internal async void UpdateLauncher()
+        internal void UpdateLauncher()
         {
             string tempPath = CurrentDirectory + @"\temp";
             if (Directory.Exists(tempPath))
@@ -102,56 +102,55 @@ namespace SimpleMinecraftLauncher
                         OnDownloadError();
                     else
                         InstallLauncher(tempPath);
+
+                    UIManager.HideLoading();
                 };
 
-                UIManager.ShowLoadingPanel();
+                UIManager.ShowLoading();
                 client.DownloadFileAsync(new Uri(Constants.Web.HOST_GET_LAUNCHER_DOWNLOAD_URL, UriKind.Absolute), CurrentDirectory + @"\temp\launcher.zip");
             }
         }
 
-        internal async void InstallClient(Version version, Action callback)
+        private void ExtractWithUIAffect(string archivePath, string installTo, Action callback)
         {
-            AsyncWorker.PollAsyncMethod(async () =>
-            {
+            UIManager.SetProgress(66);
+            ExtractArchive(archivePath, installTo, () => {
+                callback();
+                UIManager.EnableControls();
                 UIManager.SetProgress(0);
-                UIManager.ShowLoadingPanel();
+                UIManager.HideLoading();
+            });
+        }
 
-                Log("Устанавливаем клиент...");
+        internal void InstallClient(Version version, Action callback=null)
+        {
+            UIManager.DisableControls();
+            UIManager.SetProgress(0);
+            UIManager.ShowLoading();
 
-                UIManager.DisableControls();
+            Log("Устанавливаем клиент...");
 
-                string archivePath = GetClientZIPFile(version.mVersionArchiveName);
-                string InstallTo = GetClientPath(version.mVersionArchiveName);
+            string archivePath = GetClientZIPFile(version.mVersionArchiveName);
+            string installTo = GetClientPath(version.mVersionArchiveName);
 
-                await Task.Run(() =>
-                {
-                    DeleteClient(version, async () =>
+            DeleteClient(version, () =>
+            {
+                UIManager.SetProgress(33);
+                if (!File.Exists(archivePath))
+                    DownloadClientArchive(version, () =>
                     {
-                        UIManager.SetProgress(33);
-                        if (!File.Exists(archivePath))
-                            await DownloadClientArchive(version, () =>
-                            {
-                                UIManager.SetProgress(66);
-                                ExtractArchive(archivePath, InstallTo);
-                                UIManager.SetProgress(100);
-                                UIManager.EnableControls();
-                                UIManager.SetProgress(0);
-                                UIManager.HideLoadingPanel();
-                            });
-                        else
-                        {
-                            UIManager.SetProgress(66);
-                            ExtractArchive(archivePath, InstallTo);
-                            UIManager.EnableControls();
-                            UIManager.SetProgress(0);
-                            UIManager.HideLoadingPanel();
-                        }
-                        Log("Распаковка " + version.mVersionArchiveName + " прошла успешно", false, Color.Green);
-
-                        callback();
+                        ExtractWithUIAffect(archivePath, installTo, () => {
+                            if (callback != null)
+                                callback();
+                        });
                     });
-                });
-
+                else
+                {
+                    ExtractWithUIAffect(archivePath, installTo, () => {
+                        if (callback != null)
+                            callback();
+                    });
+                }
             });
         }
         internal string GetClientPath(string archiveName)
@@ -190,7 +189,7 @@ namespace SimpleMinecraftLauncher
             });
         }
 
-        internal void DeleteClient(Version version, Action callback)
+        internal void DeleteClient(Version version, Action callback=null)
         {
             AsyncWorker.PollAsyncMethod(() =>
             {
@@ -205,19 +204,20 @@ namespace SimpleMinecraftLauncher
 
                 Log("Удаление " + StripExtension(version.mVersionArchiveName) + " прошло успешно", false, Color.Green);
 
-                callback();
+                if (callback != null)
+                    callback();
             });
         }
 
-        internal void ValidateGameClient(Version version, bool notify_client_ready = false)
+        internal void ValidateGameClient(Version version)
         {
             if (version == null)
             {
                 Log("Ошибка - версия не обнаружена", false, Color.Red);
                 return;
             }
-
-            ValidateClientInstallation(version, false, notify_client_ready);
+            
+            ValidateClientInstallation(version, new Action(() => { LaunchClient(version); }), false, true);
             CurrentVersions.versions[CurrentVersions.versions.IndexOf(version)].SetValidated(true);
         }
 
@@ -281,11 +281,11 @@ namespace SimpleMinecraftLauncher
         {
             Log("Загрузка закончилась с ошибкой", false, Color.IndianRed);
             UIManager.ShowNotification("Не удалось загрузить данные. Соединение недоступно");
-            UIManager.HideLoadingPanel();
+            UIManager.HideLoading();
             UIManager.EnableControls();
         }
 
-        private async void ValidateClientArchive(Version version, Action callbackOnDownload)
+        private void ValidateClientArchive(Version version, Action callbackOnDownload)
         {
             if (version == null)
             {
@@ -311,13 +311,13 @@ namespace SimpleMinecraftLauncher
                 else
                 {
                     Log("Не верная контрольная сумма " + version.mVersionArchiveName + " - скачиваем", false, Color.Yellow);
-                    await DownloadClientArchive(version, () => { UIManager.EnableControls(); });
+                    DownloadClientArchive(version, () => { UIManager.EnableControls(); });
                 }
             }
             else
             {
                 Log("Не найден " + version.mVersionArchiveName + " - скачиваем", false, Color.Yellow);
-                await DownloadClientArchive(version, () => { UIManager.EnableControls(); });
+                DownloadClientArchive(version, () => { UIManager.EnableControls(); });
             }
         }
 
@@ -381,7 +381,7 @@ namespace SimpleMinecraftLauncher
             }
         }
 
-        private async Task DownloadClientArchive(Version version, Action callback)
+        private void DownloadClientArchive(Version version, Action callback)
         {
 
             if (version == null)
@@ -390,11 +390,8 @@ namespace SimpleMinecraftLauncher
                 return;
             }
 
-            await Task.Run(() =>
+            AsyncWorker.PollAsyncMethod(() =>
             {
-
-                string ret = string.Empty;
-
                 try
                 {
                     using (var client = new WebClient())
@@ -423,18 +420,18 @@ namespace SimpleMinecraftLauncher
                             else
                             {
                                 Log("Проверка установки...");
-                                ValidateClientInstallation(version);
+                                ValidateClientInstallation(version, new Action(() => {
+                                    LaunchClient(version);
+                                }));
                                 UIManager.SetProgress(0);
-                                UIManager.HideLoadingPanel();
-
-                                ValidateClientInstallation(version, true, true);
+                                UIManager.HideLoading();
 
                                 callback();
                             }
                         };
 
                         UIManager.DisableControls();
-                        UIManager.ShowLoadingPanel();
+                        UIManager.ShowLoading();
                         client.DownloadFileAsync(new Uri(Constants.Web.HOST_DOWNLOAD_CLIENT_ARCHIVE + version.mVersionArchiveName, UriKind.Absolute), GetClientZIPFile(version.mVersionArchiveName));
                     }
                     Log("Архив " + version.mVersionArchiveName + " скачан успешно", false, Color.Green);
@@ -443,7 +440,6 @@ namespace SimpleMinecraftLauncher
                 {
                     Log("Не удалось скачать архив " + version.mVersionArchiveName + "(" + ex.Message + ")", false, Color.Red);
                 }
-                return ret;
             });
 
         }
@@ -478,15 +474,19 @@ namespace SimpleMinecraftLauncher
             UIManager.DisableUpdateButton();
         }
 
-        private void ExtractArchive(string archivePath, string installPath)
+        private void ExtractArchive(string archivePath, string installPath, Action callback)
         {
             try
             {
-                ZipFile.ExtractToDirectory(archivePath, installPath);
+                Task.Run(() => {
+                    ZipFile.ExtractToDirectory(archivePath, installPath);
+                    Log("Распаковка архива прошла успешно", false, Color.Green);
+                    callback();
+                });
             }
             catch (Exception ex)
             {
-                Log("Не удалось распаковать архив " + archivePath + "(" + ex.Message + ")", false, Color.Red);
+                Log($"Не удалось распаковать архив {archivePath }({ex.Message})", false, Color.Red);
                 UIManager.ShowNotification("Не удалось распаковать архив (" + ex.Message + ")");
             }
         }
@@ -504,7 +504,23 @@ namespace SimpleMinecraftLauncher
             return filesCount >= 3;
         }
 
-        private void ValidateClientInstallation(Version version, bool force_reinstall = false, bool show_client_ready_notification = false)
+        private void LaunchClient(Version version)
+        {
+            Log("Запускаем клиент");
+
+            string clientPath = GetClientPath(version.mVersionArchiveName);
+            string username = Settings.Default.nickname;
+            string versionName = version.mVersionName;
+
+            mClientLauncher = new MinecraftLauncher(clientPath, username, versionName, "2G", "5G");
+
+            if (mClientLauncher.CanLaunch)
+                mClientLauncher.LaunchClient();
+            else
+                MessageBox.Show("Клиент повреждён. Отсутствуют библиотеки. Запуск невозможен", "Ошибка запуска Minecraft", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void ValidateClientInstallation(Version version, Action callback=null, bool force_reinstall=false, bool show_client_ready_notification=false)
         {
             if (version == null)
             {
@@ -517,21 +533,18 @@ namespace SimpleMinecraftLauncher
             ValidateClientArchive(version, () => {
                 if (!SimpleClientExistanceValidation(version) | force_reinstall)
                     InstallClient(version, () => {
-                        UIManager.EnableControls();
-                        UIManager.SwitctToLaunch();
-                        if (show_client_ready_notification)
-                            UIManager.ShowNotification("Клиент в порядке. Можно запускать!");
+                        if (callback != null)
+                            callback();
                     });
                 else
                 {
-                    Log("Клиент " + version.mVersionArchiveName + " в порядке", false, Color.Green);
-                    UIManager.EnableControls();
-                    UIManager.SwitctToLaunch();
+
                     if (show_client_ready_notification)
                     {
                         UIManager.ShowNotification("Клиент в порядке. Можно запускать!");
                         FlashWindow.FlashWindowEx(UIManager.MainForm());
                     }
+                    callback();
                 }
             });
         }

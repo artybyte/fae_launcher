@@ -84,6 +84,10 @@ namespace SimpleMinecraftLauncher
             /// URL to launcher build
             /// </summary>
             public static string HOST_GET_LAUNCHER_DOWNLOAD_URL = "http://" + HOST_IP + "/launcher.zip";
+            /// <summary>
+            /// URL to Ely.By skins service
+            /// </summary>
+            public static string ELY_BY_SKINS_SERVICE_URL = "https://ely.by/";
         }
 
         internal static class Util
