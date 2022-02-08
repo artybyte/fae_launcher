@@ -47,7 +47,8 @@ namespace SimpleMinecraftLauncher
                 versionList.Items.Clear();
                 foreach (Version version in mClientManager.GetVersionData().versions)
                 {
-                    versionList.Items.Add(version.mVersionName + " - " + version.mVersionDescription);
+                    if (version.mVersionEnabled)
+                        versionList.Items.Add(version.mVersionName + " - " + version.mVersionDescription);
                 }
             };
 
