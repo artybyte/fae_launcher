@@ -10,6 +10,8 @@ using System.Drawing;
 using System.Media;
 using System.ComponentModel;
 
+// current build - 1.0.1.3
+
 namespace SimpleMinecraftLauncher
 {
     public partial class Form1 : Form
